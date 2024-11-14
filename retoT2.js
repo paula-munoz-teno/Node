@@ -2,36 +2,52 @@
 
 
 //CON CALLBAKCS
-const person = {
-    name: "Paula",
-    surname: "Muñoz Teno",
-    age: 22
-};
+ 
+// 1 Crea un objeto con las siguientes propiedades: name, surname, age.
+
+// 2 Utilizando los métodos writeFile y readFile, guarda el objeto en un archivo con extensión .json y lee el
+// objeto e imprimelo por consola.
+
+// 3Todo ello en una única ejecución de JavaScript. Al hacer cada intento, borra el json anterior antes de
+// ejecutar el archivo de nuevo.
 
 
-const fs = require;  
-// 2. Guardar el objeto en un archivo JSON (writeFile)
-//Esto me permote guardar el objeto en el documento person.json(pero no lo veo, para ello necesito el read)
-fs.writeFile('person.json', JSON.stringify(person), (err) => {
-    if (err) {
-        console.error('Error al guardar el archivo:', err);
-        return;
-    }
-    console.log('Archivo guardado correctamente.');
+// //0. IMPORTO MÉTODOS REQUERIDOS
+// const fs = require('fs');
 
-//person,json: path to file (donde se guarda)
-//JSON.stringify(person): qué se guarda 
 
-    // 3. Leer el archivo JSON (readfile)
-    fs.readFile('person.json', 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error al leer el archivo:', err);
-            return;
-        }
-        else{console.log(data)}
 
-    });
-});
+// // // 1. Crear el objeto
+// const person = {
+//     name: "Paula",
+//     surname: "Muñoz Teno",
+//     age: 22
+// };
+
+
+// // 2. Guardar el objeto en un archivo JSON (writeFile)
+// //Esto me permote guardar el objeto en el documento person.json(pero no lo veo, para ello necesito el read)
+// fs.writeFile('person.json', JSON.stringify(person), (err) => {
+//     if (err) {
+//         console.error('Error al guardar el archivo:', err);
+//         return;
+//     }
+//     console.log('Archivo guardado correctamente.');
+
+// //person,json: path to file (donde se guarda)
+// //JSON.stringify(person): qué se guarda 
+
+//     // 3. Leer el archivo JSON (readfile)
+//     fs.readFile('person.json', 'utf8', (err, data) => {
+//         if (err) {
+//             console.error('Error al leer el archivo:', err);
+//             return;
+//         }
+//         else{console.log(data)}
+
+//     });
+// });
+
 
 
 // CON PROMESA THEN/CATCH
@@ -61,6 +77,34 @@ fs.writeFile('person.json', JSON.stringify(person), (err) => {
 //     console.log(error);
 //     //esto te indica que error ha pasado
 // })
+
+
+
+// CON PROMESA ASYNC/AWAIT
+
+// const fs = require("fs/promises");
+
+// writeAndRead = async () => {
+//     try{
+//     await fs.writeFile("person.json", JSON.stringify({name:"Paula", surename: "Muñoz Teno", age: 22}))
+//     console.log("El fichero se ha leido correctamente");
+//     const dato = await fs.readFile("person.json", "utf8");
+//     console.log("el fichero se ha leido correctamente");
+//     console.log(dato);
+//     }
+
+//    //Aync: genera la función asíncrona
+//    //await: delante de cada método asíncrono se pone la palabra await 
+// catch(error){
+//     console.log(error)
+// }    
+// }
+
+
+// //Hay que incovar a la función para que tenga lugar
+
+// writeAndRead();
+
 
 
 
@@ -125,5 +169,111 @@ fs.writeFile('person.json', JSON.stringify(person), (err) => {
 //             } );
       
 //         });
+
+
+//CON PROMESA THEN/CATCH
+// const fs = require("fs/promises"); 
+// const readline = require('readline');
+
+// const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout
+// });
+
+// //ponemos writefile con el nombre dle fichero y el objeto creado 
+
+// rl.question('What is your name? ', (name) => {
+
+//     rl.question('What is your surename?', (surename) => {
+
+//         rl.question('What is your age?', (age) => {
+//             //creo objeto
+//             const persona = {
+//                 name: name,
+//                 surename:surename,
+//                 age: age, 
+//             };
+
+// fs.writeFile("person.json",
+//      JSON.stringify(persona))
+// //en el then no se pone nada porque el único param que había es el error y
+// //el error se obvia va por catch
+// .then(()=>{
+//     console.log("Archivo guardado correctamente");
+//     return fs.readFile("person.json", "utf8");
+
+// })
+// .then((dato =>{
+//     console.log("El fichero se ha leido correctamente");
+//     console.log(dato);
+// }
+// ))
+// //este then sabe que viene de la función de encima 
+
+// .catch((error)=>{
+//     console.log("Ha habido un error");
+//     console.log(error);
+//     //esto te indica que error ha pasado
+// rl.close();
+// })
+// } );   
+          
+// } );
+
+// });
+
+
+//CON PROMESA ASYNC/AWAIT
+
+const fs = require("fs/promises"); 
+const readline = require('readline');
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+//ponemos writefile con el nombre dle fichero y el objeto creado 
+
+rl.question('What is your name? ', (name) => {
+
+    rl.question('What is your surename?', (surename) => {
+
+        rl.question('What is your age?', (age) => {
+            //creo objeto
+            const persona = {
+                name: name,
+                surename:surename,
+                age: age, 
+            };
+
+writeAndRead = async () => {
+    try{
+    await fs.writeFile("person.json", JSON.stringify({persona}))
+    console.log("El fichero se ha leido correctamente");
+    const dato = await fs.readFile("person.json", "utf8");
+    console.log("El fichero se ha leido correctamente");
+    console.log(dato);
+    }
+
+   //Aync: genera la función asíncrona
+   //await: delante de cada método asíncrono se pone la palabra await 
+catch (error){
+    console.log(error)
+} 
+
+rl.close();
+
+}
+
+writeAndRead();
+
+} );   
+          
+} );
+
+});
+
+//Hay que incovar a la función para que tenga lugar
 
 
