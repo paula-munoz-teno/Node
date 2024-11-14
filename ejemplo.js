@@ -1,34 +1,3 @@
-// const fs = require('fs');
-
-// //Escribir un objeto
-
-// fs.writeFile("ejemplo.json",
-//      JSON.stringify({nombre:"Pepe", apellido: "Garcia"}), 
-//      (error) =>{
-//         if (error) {
-//         console.log("No se ha podido guardar el fichero");
-//         }
-//         else{
-//             console.log("Se ha creado el fichero correctamente");
-
-//         //Aquí se escrib el readfile para leer el fichero. Debe de ser
-//         //dentro para poder leerlo, si es fuera no se si se ha creado
-//             fs.readFile("ejemplo.json", 
-//                         "utf8", 
-//                         (error, dato) =>{
-//                 if (error){
-//                     console.log("No se ha podido escribir el fichero", error);
-//                 }
-//                 else{
-//                     console.log("El fichero se ha escrito correctamente")
-//                     console.log(dato);
-//                 }
-//             }   
-//         )
-//         }
-//         ;
-                
-//      });
 
 
 
@@ -120,3 +89,34 @@ writeAndRead();
 
 //ASYNC AWAY nos permite ahorrarnos las callbacks 
 //SOLO HACE FALTA UN CATCH POR PROMESA pero el del try se puede encapsular para saber qué está ocurriendo
+
+
+
+// R1
+
+
+const fs = require("fs/promises"); 
+
+//ponemos writefile con el nombre dle fichero y el objeto creado 
+
+fs.writeFile("person.json",
+     JSON.stringify({name:"Paula", surename: "Muñoz Teno", age: 22}))
+//en el then no se pone nada porque el único param que había es el error y
+//el error se obvia va por catch
+.then(()=>{
+    console.log("Se ha creado el fichero");
+    return fs.readFile("person.json", "utf8");
+
+})
+.then((dato =>{
+    console.log("El fichero se ha leido correctamente");
+    console.log(dato);
+}
+))
+//este then sabe que viene de la función de encima 
+
+.catch((error)=>{
+    console.log("Ha habido un error");
+    console.log(error);
+    //esto te indica que error ha pasado
+})
