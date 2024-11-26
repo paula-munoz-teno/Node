@@ -1,5 +1,7 @@
 //se copia tal cual 
+const bodyParser = require('body-parser');
 const express = require("express")
+
 const cors = require('cors')
 const bookRouters = require("./routers/book.routers")
 const booksRouters = require("./routers/books.routers")
@@ -9,6 +11,7 @@ const app = express();
  
 app.set("port", process.env.PORT || 3001)
 
+app.use(bodyParser.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
