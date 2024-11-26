@@ -1,190 +1,161 @@
+
 //funcionalidad
+
+class Book {
+    constructor(id, title, type, author,) {
+        this.id = id;
+        this.title = title;
+        this.type = type;
+        this.author = author;
+        
+    }
+}
 
 //la variable que queremos definir. Incialmente vacía ya que el libro y el cliente de la API 
 //lo irán rellenando 
-let libros = null;
+let libros = [];
  // libros = [{id: 33, title: "Jose", type: "tapa blanda", author: Ana Mena},
 //  {id: 33, title: "Jose", type: "tapa blanda", author: Ana Mena},
 //  {id: 33, title: "Jose", type: "tapa blanda", author: Ana Mena}}
+//se inicia array vacío
 
 
 
 
-//F1(ESTA MEJOR)
-
-
-
-function getBooks(request, response)
-{
+function getBooks(request, response) {
+    // Variable para almacenar la respuesta
     let respuesta;
-    let campo = request.query.campo;
 
-    if (libros != null && campo) 
-        respuesta = libro[campo];
-    //queremos el valor de la variable campo
-    else if (libros != null)
-        respuesta = libros;
-    else
-        respuesta = {error: true, codigo: 200, mensaje: "El array libros no existe"}
-    
-    response.send(respuesta);   
-}
-
-function postBooks(request, response)
-{
-    let respuesta; 
-    console.log(request.body)
-    if (libros === null)
-    {
-        libros     = [{id: request.body[0].id,
-                       title: request.body[0].title, 
-                       type: request.body[0].type,
-                       author: request.body[0].author,
-
-                    },
-                    {id: request.body[1].id,
-                        title: request.body[1].title, 
-                        type: request.body[1].type,
-                        author: request.body[1].author,
- 
-                     },
-                     {id: request.body[2].id,
-                        title: request.body[2].title, 
-                        type: request.body[2].type,
-                        author: request.body[2].author,
- 
-                     }]
-        
-        respuesta   = {error: false, codigo: 200, 
-                        mensaje: 'Librso creado',data: libros};
+    // Verificar si el array de libros no está vacío
+    if (libros.length > 0) {
+        respuesta = { error: false, codigo: 200, mensaje: "Lista de libros obtenida", data: libros };
+    } else {
+        // Si no hay libros en el array
+        respuesta = { error: true, codigo: 404, mensaje: "No hay libros disponibles" };
     }
-    else
-        respuesta = {error: true, codigo: 200, 
-                        mensaje: 'Libros ya existe'};
 
+    // Enviar la respuesta
     response.send(respuesta);
 }
+
+
+
+function postBooks(request, response) {
+    // quiero el Obtener el título, el tipo y el autor  
+    let title = request.body.title;
+    let type = request.body.type;
+    let author = request.body.author;
+    let id = 1; // Por defecto, empezar con ID 1
+
+    // Usar un bucle for...of para encontrar el último ID
+    if (libros.length > 0) {
+        for (let libro of libros) {
+            // Asignar el ID al máximo encontrado
+            if (libro.id >= id) {
+                id = libro.id + 1; // Aumentar el ID si se encuentra un ID mayor
+            }
+        }
+    }
+
+    // Crear un nuevo libro usando la clase Book
+    let newBook = new Book(id, title, type, author);
+
+    // Agregar el nuevo libro al arreglo de libros
+    libros.push(newBook);
+    console.log(libros);
+
+    // Crear objeto de respuesta
+     respuesta = {error: false, codigo: 200, mensaje: 'Libro creado',data: libros};
+
+    // Enviar la respuesta al cliente
+    response.send(respuesta);
+}
+
+
 
 
 function putBooks(request, response) {
-    let respuesta;
+    // Obtener el ID del libro desde los parámetros de consulta
+    let id = parseInt(request.query.id); 
+    console.log("ID recibido:", id);
 
-    // Asegúrate de que libros esté inicializado como un array vacío
-    if (!libros) {
-        libros = [];
+    let respuesta
+
+    // Verificar que el ID sea un número válido
+    if (isNaN(id)) {
+        return response.status(400).send({
+            error: true,
+            codigo: 400,
+            mensaje: "ID no válido"
+        });
     }
 
-    if (libros.length > 0) {
-        // Iterar sobre el cuerpo de la solicitud
-        for (let i = 0; i < request.body.length; i++) {
-            const libro = request.body[i];
-            if (libros[i]) {
-                libros[i].id = libro.id || libros[i].id;
-                libros[i].title = libro.title || libros[i].title;
-                libros[i].type = libro.type || libros[i].type;
-                libros[i].author = libro.author || libros[i].author;
-            }
-        }
+    
+    let updatedData = request.body; 
 
-        respuesta = { error: false, codigo: 200, mensaje: 'Libros actualizados', data: libros };
-    } else {
-        respuesta = { error: true, codigo: 404, mensaje: 'El array libros está vacío' };
+    
+    let  bookIndex = libros.findIndex(libro => libro.id === id); // Buscar el índice del libro
+
+    if (bookIndex === -1) {
+        respuesta = {
+            error: true,
+            codigo: 404,
+            mensaje: "Libro no encontrado"
+        };
     }
+
+    // Actualizar los datos del libro
+    libros[bookIndex] = { ...libros[bookIndex], ...updatedData }; // Actualizar el libro con los nuevos datos
+
+    // Devolver la respuesta
+    respuesta = {
+        error: false,
+        codigo: 200,
+        mensaje: "Libro actualizado con éxito",
+        libro: libros[bookIndex]
+    };
 
     response.send(respuesta);
 }
 
-function deleteBooks(request, response)
-{
-    let respuesta
-    if (libros != null)
-    {    
-        libros     = null;
-        respuesta   = {error: false, codigo: 200, 
-                        mensaje: 'libros borrado',data: libros};
-    }  
-    else
-        respuesta   = {error: true, codigo: 200, 
-                        mensaje: 'El array libros no existe',data: libros};
 
+function deleteBooks(request, response) {
+    // Obtener el ID del libro a eliminar desde los parámetros de la solicitud
+    let id = parseInt(request.query.id);
+    
+    // Variable para almacenar la respuesta
+    let respuesta;
+
+    // Buscar el índice del libro en el array de libros
+    let libroIndex = libros.findIndex(libro => libro.id === id);
+
+    if (libroIndex !== -1) {
+        // Si se encuentra el libro, eliminarlo del array
+        libros.splice(libroIndex, 1);
+
+        // Crear objeto de respuesta
+        respuesta = {
+            error: false,
+            codigo: 200,
+            mensaje: 'Libro eliminado',
+            data: libros
+        };
+    } else {
+        // Si no se encuentra el libro, enviar un error
+        respuesta = {
+            error: true,
+            codigo: 404,
+            mensaje: 'Libro no encontrado'
+        };
+    }
+
+    // Enviar la respuesta al cliente
     response.send(respuesta);
-};
+}
+//hacer un filter 
 
 module.exports = {getBooks, postBooks, putBooks, deleteBooks};
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//HOLA
-
-
-
-
-// function putBooks(request, response)
-// {
-//     let respuesta
-//     if (libros !=  null)
-        
-//     {
-
-//         // libros[0].id = request.body.id1,
-//         // libros[0].title      = request.body.title1,
-//         // libros[0].type   = request.body.type1,
-//         // libros[0].author = request.body.author1,
-
-//         // libros[1].id = request.body.id1;
-//         // libros[1].title      = request.body.title1,
-//         // libros[1].type   = request.body.type1,
-//         // libros[1].author = request.body.author1,
-
-//         // libros[2].id = request.body.id1,
-//         // libros[2].title      = request.body.title1,
-//         // libros[2].type   = request.body.type1,
-//         // libros[2].author = request.body.author1,
-
-//         libros[0].id = request.body[0].id1;
-//         libros[0].title      = request[0].body.title1;
-//         libros[0].type   = request.body[0].type1;
-//         libros[0].author = request.body[0].author1;
-
-//        libros[1].id = request.body[1].id2;
-//         libros[1].title = request.body[1].title2; 
-//         libros[1].type = request.body[1].type2;
-//         libros[1].author = request.body[1].author2;
-
-        
-//         libros[2].id = request.body[1].id3;
-//         libros[2].title = request.body[1].title3;
-//         libros[2].type = request.body[1].type3;
-//         libros[2].author = request.body[1].author3;
-
-
-    
-
-//         respuesta           = {error: false, codigo: 200, 
-//                                 mensaje: 'Libros actualizado',data: libros};
-//     }
-
-
-//     else
-//         respuesta = {error: true, codigo: 200, 
-//                         mensaje: 'El array libros no existe',data: libros};
-
-//     response.send(respuesta);
-        
-//         };
 
