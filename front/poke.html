@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeAPI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="poke.css">
+
+</head>
+<body>
+    <div class="padre">
+        <header>
+            <img id="poke" src="fotos/International_Pokémon_logo.svg.png">
+        </header>
+        <h2>Do you want to know everything about Pokemons?</h2>
+        <div class="hijohijo">
+            <div class="hijo">
+                <img id="c" src="fotos/c2.png">
+                <form id="Form">
+                            <div class="F1">
+                                <h3>Please insert a Pokemon name</h3>
+                                <label id="name" >Pokemon name</label>
+                                <input type="text" id="name2" name="name" required>
+                            </div>
+                            <button type="button" id="searchButton" onclick="buscarPokemon()">Buscar Pokémon</button>
+
+                </form>
+                <img id="c" src="fotos/c1.png">
+
+            </div>
+            <div class="pokeI">
+                <img id="c" src="fotos/c2.png">
+                    <div class="pokeA">
+                        <h4>POKEMON INFORMATION</h4>
+                        <div class ="titles">
+                            <h4>Nombre</h4>
+                            <h4>Imagen</h4>
+                            <h4>Habilidades</h4>
+                        </div>
+
+                        <div id="pokemonInfo"></div>
+                    </div>
+                <img id="c" src="fotos/c1.png">
+
+            </div>
+        </div>
+    </div>
+    <script src="poke.js"></script>
+    
+</body>
+</html>
