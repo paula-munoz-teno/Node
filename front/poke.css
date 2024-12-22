@@ -1,0 +1,163 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.padre{
+    /* border: 2px solid red; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 200vh;
+    background-color: rgb(32, 96, 136);
+}
+
+
+header{
+    /* border: 2px solid yellow; */
+    width:100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(200, 7, 7);
+}
+
+h2{
+    /* border: 2px solid palevioletred; */
+    width:100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-top: 30px;
+
+}
+
+h3{
+    /* border: 2px solid palevioletred; */
+    width:100%;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 60px;
+
+}
+
+
+.hijohijo{
+    background-color:rgb(32, 96, 136)  ;
+    /* border: 2px solid rgb(230, 212, 16); */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 80%;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.hijo{
+    background-color:black ;
+    /* border: 2px solid green; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 70%;
+    height: 80%;
+    justify-content: space-between;
+}
+
+.pokeI{
+    background-color:black ;
+    /* border: 2px solid green; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 70%;
+    height: 80%;
+    justify-content: space-between;
+
+}
+
+.pokeA{
+    /* border: 2px solid red; */
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 80%;
+    justify-content:center;
+    align-items: center;
+    color: white;
+}
+
+#pokemonInfo{
+    /* border: 2px solid green; */
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+    height: 80%;
+    justify-content:center;
+    color: white;
+}
+
+.titles{
+    /* border: 2px solid blue; */
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 20%;
+    justify-content:space-around;
+    color: white;
+}
+
+#Form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    height: 80%;
+    justify-content: center;
+    /* border:2px solid yellow; */
+}
+
+#searchButton{
+    background-color: yellow;
+    margin-top: 40px;
+}
+#name2{
+    color:black;
+    background-color:white;
+}
+
+#name{
+    color:white;
+    margin-bottom: 20px;
+}
+.F1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 40%;
+    justify-content: center;
+    /* border: 2px solid pink; */
+
+}
+
+#poke{
+    width: 140px;
+    height: 60px;
+}
+
+#c{
+    width: 20%;
+    height: 100%;
+    background-color: black;
+}
