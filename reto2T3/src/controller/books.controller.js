@@ -1,88 +1,100 @@
-
-//funcionalidad
-
+// Clase Book
 class Book {
-    constructor(id, title, type, author,) {
-        this.id = id;
+    constructor(title, type, author, price, photo, id_book, id_user) {
         this.title = title;
         this.type = type;
         this.author = author;
-        
+        this.price = price;
+        this.photo = photo;
+        this.id_book = id_book;
+        this.id_user = id_user;
     }
 }
 
-//la variable que queremos definir. Incialmente vacía ya que el libro y el cliente de la API 
-//lo irán rellenando 
-let libros = [];
- // libros = [{id: 33, title: "Jose", type: "tapa blanda", author: Ana Mena},
-//  {id: 33, title: "Jose", type: "tapa blanda", author: Ana Mena},
-//  {id: 33, title: "Jose", type: "tapa blanda", author: Ana Mena}}
-//se inicia array vacío
-
-
+// Inicializar el array de libros
+let libros = [
+    new Book("Un verso suelto", "Tapa Blanda", "Use Lahoz", 15, "assets/img/L1.jpg", 22222, 22221),
+    new Book("Carol", "Tapa Blanda", "Patricia Highsmith", 18, "assets/img/L2carol.jpeg", 33333, 33331),
+    new Book("Los siete Maridos de Evelyn Hugo", "Tapa Blanda", "Taylor Jenkins Reid", 20, "assets/img/L3.webp", 44444, 44441)
+];
 
 
 function getBooks(request, response) {
-    // Variable para almacenar la respuesta
+    console.log('Solicitando libros'); // Agrega este log
     let respuesta;
 
-    // Verificar si el array de libros no está vacío
     if (libros.length > 0) {
         respuesta = { error: false, codigo: 200, mensaje: "Lista de libros obtenida", data: libros };
     } else {
-        // Si no hay libros en el array
         respuesta = { error: true, codigo: 404, mensaje: "No hay libros disponibles" };
     }
 
-    // Enviar la respuesta
     response.send(respuesta);
+
 }
-
-
-
-function postBooks(request, response) {
-    // quiero el Obtener el título, el tipo y el autor  
-    let title = request.body.title;
-    let type = request.body.type;
-    let author = request.body.author;
-    let id = 1; // Por defecto, empezar con ID 1
-
-    // Usar un bucle for...of para encontrar el último ID
-    if (libros.length > 0) {
-        for (let libro of libros) {
-            // Asignar el ID al máximo encontrado
-            if (libro.id >= id) {
-                id = libro.id + 1; // Aumentar el ID si se encuentra un ID mayor
-            }
+    function getOne(request, response) {
+        let id_book = parseInt(request.params.id_book); // Cambia a params
+        console.log("Buscando libro con ID:", id_book); // Agrega este log
+    
+        let libro = libros.find(libro => libro.id_book === id_book);
+        if (libro) {
+            response.send({ error: false, codigo: 200, mensaje: "Libro encontrado", data: libro });
+        } else {
+            response.send({ error: true, codigo: 404, mensaje: "Libro no encontrado" });
         }
     }
 
-    // Crear un nuevo libro usando la clase Book
-    let newBook = new Book(id, title, type, author);
 
-    // Agregar el nuevo libro al arreglo de libros
+
+// // Función para obtener libros
+// function getBooks(request, response) {
+//     let respuesta;
+
+//     if (libros.length > 0) {
+//         respuesta = { error: false, codigo: 200, mensaje: "Lista de libros obtenida", data: libros };
+//     } else {
+//         respuesta = { error: true, codigo: 404, mensaje: "No hay libros disponibles" };
+//     }
+
+//     response.send(respuesta);
+// }
+
+// Función para agregar un nuevo libro
+function postBooks(request, response) {
+    let title = request.body.title;
+    let type = request.body.type;
+    let author = request.body.author;
+    let price = request.body.price;
+    let photo = request.body.photo;
+    let id_book = parseInt(request.body.id_book); // Asegúrate de convertir a número
+    let id_user = request.body.id_user;
+
+    console.log("ID del libro a agregar:", id_book); // Agrega este log
+
+    // Verificar si el id_book ya existe
+    if (libros.some(libro => libro.id_book === id_book)) {
+        return response.status(400).send({
+            error: true,
+            codigo: 400,
+            mensaje: "El ID del libro ya existe"
+        });
+    }
+
+    let newBook = new Book(title, type, author, price, photo, id_book, id_user);
     libros.push(newBook);
-    console.log(libros);
+    console.log(libros); // Verifica el array de libros
 
-    // Crear objeto de respuesta
-     respuesta = {error: false, codigo: 200, mensaje: 'Libro creado',data: libros};
-
-    // Enviar la respuesta al cliente
+    let respuesta = { error: false, codigo: 200, mensaje: 'Libro creado', data: libros };
     response.send(respuesta);
 }
 
-
-
-
+// Función para actualizar un libro
 function putBooks(request, response) {
-    // Obtener el ID del libro desde los parámetros de consulta
-    let id = parseInt(request.query.id); 
-    console.log("ID recibido:", id);
+    console.log('Cuerpo de la solicitud:', request.body); // Agrega este log
+    let id_book = parseInt(request.body.id_book);
+    console.log("ID recibido:", id_book);
 
-    let respuesta
-
-    // Verificar que el ID sea un número válido
-    if (isNaN(id)) {
+    if (isNaN(id_book)) {
         return response.status(400).send({
             error: true,
             codigo: 400,
@@ -90,72 +102,79 @@ function putBooks(request, response) {
         });
     }
 
-    
-    let updatedData = request.body; 
-
-    
-    let  bookIndex = libros.findIndex(libro => libro.id === id); // Buscar el índice del libro
+    let updatedData = request.body;
+    let bookIndex = libros.findIndex(libro => libro.id_book === id_book);
 
     if (bookIndex === -1) {
-        respuesta = {
+        return response.status(404).send({
             error: true,
             codigo: 404,
             mensaje: "Libro no encontrado"
-        };
+        });
     }
 
     // Actualizar los datos del libro
-    libros[bookIndex] = { ...libros[bookIndex], ...updatedData }; // Actualizar el libro con los nuevos datos
-
-    // Devolver la respuesta
-    respuesta = {
+    libros[bookIndex] = { ...libros[bookIndex], ...updatedData };
+    let respuesta = {
         error: false,
         codigo: 200,
         mensaje: "Libro actualizado con éxito",
         libro: libros[bookIndex]
     };
-
+    console.log(respuesta);
     response.send(respuesta);
+    console.log(libros)
+    console.log(data)
 }
 
+// // Función para eliminar un libro
+// function deleteBooks(request, response) {
+//     let id_book = parseInt(request.body.id_book); // Asegúrate de que el ID se esté enviando en el cuerpo
+//     let libroIndex = libros.findIndex(libro => libro.id_book === id_book);
+
+//     let respuesta;
+
+//     if (libroIndex !== -1) {
+//         libros.splice(libroIndex, 1);
+//         respuesta = {
+//             error: false,
+//             codigo: 200,
+//             mensaje: 'Libro eliminado',
+//             data: libros
+//         };
+//     } else {
+//         respuesta = {
+//             error: true,
+//             codigo: 404,
+//             mensaje: 'Libro no encontrado'
+//         };
+//     }
+
+//     response.send(respuesta);
+// }
 
 function deleteBooks(request, response) {
-    // Obtener el ID del libro a eliminar desde los parámetros de la solicitud
-    let id = parseInt(request.query.id);
-    
-    // Variable para almacenar la respuesta
-    let respuesta;
-
-    // Buscar el índice del libro en el array de libros
-    let libroIndex = libros.findIndex(libro => libro.id === id);
+    let id_book = parseInt(request.params.id_book); // Cambia a params
+    let libroIndex = libros.findIndex(libro => libro.id_book === id_book);
 
     if (libroIndex !== -1) {
-        // Si se encuentra el libro, eliminarlo del array
         libros.splice(libroIndex, 1);
-
-        // Crear objeto de respuesta
-        respuesta = {
+        response.send({
             error: false,
             codigo: 200,
             mensaje: 'Libro eliminado',
-            data: libros
-        };
+            data: libros // Devuelve la lista actualizada
+        });
     } else {
-        // Si no se encuentra el libro, enviar un error
-        respuesta = {
+        response.send({
             error: true,
             codigo: 404,
             mensaje: 'Libro no encontrado'
-        };
+        });
     }
-
-    // Enviar la respuesta al cliente
-    response.send(respuesta);
 }
-//hacer un filter 
-
-module.exports = {getBooks, postBooks, putBooks, deleteBooks};
 
 
 
-
+// Exportar las funciones
+module.exports = { getOne, getBooks, postBooks, putBooks, deleteBooks };
